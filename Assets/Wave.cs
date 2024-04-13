@@ -5,8 +5,10 @@ using UnityEngine;
 public class Wave : MonoBehaviour
 {
     public Agent[] agents;
+    public bool isChasing = false;
     public void StartWaveChase(GameObject player)
     {
+        if (!isChasing) isChasing = true;
         foreach (Agent agent in agents)
         {
             agent.isChasing = true;

@@ -23,7 +23,7 @@ public class PlayerHealth : MonoBehaviour
     {
 
         playerHealth -= damage;
-        if (playerHealth <= 0f)
+        if (playerHealth <= 0f && !isDead)
         {
             playerHealth = 0f;
             //player dead
