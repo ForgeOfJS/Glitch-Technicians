@@ -63,7 +63,7 @@ public class Laser_Rifle : MonoBehaviour
         //print("!");
         //if mouse1 pressed fire
         //also limits fire presses based on rate of fire values and current charge
-        if (Input.GetMouseButton(1) && Time.time >= nextToFire && currCharge < totalCharge && gunIsGrabbed)
+        if (Input.GetButton("Fire1") && Time.time >= nextToFire && currCharge < totalCharge && gunIsGrabbed)
         {
             print("!");
             laserSound.PlayOneShot(clip, 1f);
