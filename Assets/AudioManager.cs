@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [SerializeField] AudioSource musicSource;
+    [SerializeField] AudioSource SFXSource;
+
     public AudioClip alienAttackSound;
     public AudioClip alienAggroSound;
     public AudioClip playerDeathSound;
+    public AudioClip background;
+
+    private void Start()
+    {
+        musicSource.clip = background;
+        musicSource.Play();
+    }
     public static AudioManager Instance { 
         get
         {
