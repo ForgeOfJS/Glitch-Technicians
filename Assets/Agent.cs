@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,6 +10,7 @@ public class Agent : MonoBehaviour
     public bool isChasing = false;
     [HideInInspector]
     public GameObject player;
+    public Animator animator;
 
     public bool canWait;
     [Range(0f, 1f)]
@@ -28,8 +30,8 @@ public class Agent : MonoBehaviour
     bool isAttacking = false;
     bool attackDelayed = false;
     [Header("Enemy Damage Stats")]
-    public float attackTimer = .5f;
-    public float attackDamage = 2f;
+    public float attackTimer = 1.5f;
+    public float attackDamage = 6f;
 
 
     void Start()
@@ -70,11 +72,12 @@ public class Agent : MonoBehaviour
                         {
 
                             agent.SetDestination(player.transform.position);
+                            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Walk_Cycle_1")) animator.SetTrigger("Walk_Cycle_1");
                             isAttacking = false;
                         }
                         else
                         {
-
+                            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Fight_Idle_1")) animator.SetTrigger("Fight_Idle_1");
                             agent.SetDestination(agent.transform.position);
                             isAttacking = true;
                             waitTimer = 0f;
@@ -94,13 +97,13 @@ public class Agent : MonoBehaviour
 
                         if (Distance > 6)
                         {
-
+                            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Walk_Cycle_1")) animator.SetTrigger("Walk_Cycle_1");
                             agent.SetDestination(player.transform.position);
 
                         }
                         else
                         {
-
+                            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Fight_Idle_1")) animator.SetTrigger("Fight_Idle_1");
                             agent.SetDestination(agent.transform.position);
 
                             waitTimer = 0f;
@@ -118,6 +121,7 @@ public class Agent : MonoBehaviour
 
                 if (canWait)
                 {
+                    animator.SetTrigger("Rest");
                     isWaiting = true;
                     waitTimer = 0f;
                 }
@@ -164,6 +168,7 @@ public class Agent : MonoBehaviour
             wanderPos.Set(x, wanderPos.y, z);
             agent.SetDestination(wanderPos);
             isTravelling = true;
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Walk_Cycle_2")) animator.SetTrigger("Walk_Cycle_2");
         }
     }
 
@@ -176,6 +181,10 @@ public class Agent : MonoBehaviour
         yield return new WaitForSeconds(attackTimer);
         this.transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.alienAttackSound);
         attackDelayed = false;
+        int randomAttack = Random.Range(1, 5);
+        string key = "Attack_";
+        string newKey = string.Concat(key, randomAttack);
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(newKey)) animator.SetTrigger(newKey);
     }
 
     void ChangePatrolPoint()
