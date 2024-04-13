@@ -10,8 +10,7 @@ public class AgentDetection : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            print(other.name);
-            wave.StartWaveChase(other.gameObject);
+            if (!wave.isChasing) wave.StartWaveChase(other.gameObject);
         }
     }
 
