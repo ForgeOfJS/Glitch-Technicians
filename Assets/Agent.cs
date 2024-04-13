@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,26 +11,25 @@ public class Agent : MonoBehaviour
     public GameObject player;
 
     public bool canWait;
-    public float totalWaitTime = 3f;
     [Range(0f, 1f)]
     public float swicthProbability;
     public GameObject[] patrolPositions;
-    public string[] endPositions;
     public bool isMelee;
 
     public bool isRange;
     NavMeshAgent agent;
     int currPatrolIndex;
     bool isTravelling;
-    bool isWaiting;
+    bool isWaiting = true;
     float waitTimer;
     bool patrolForward = true;
     [SerializeField]
     public float Distance;
-    float dodgeTimer = 0f;
     bool isAttacking = false;
-    bool attackDelayed = true;
+    bool attackDelayed = false;
+    [Header("Enemy Damage Stats")]
     public float attackTimer = .5f;
+    public float attackDamage = 2f;
 
 
     void Start()
@@ -47,7 +47,7 @@ public class Agent : MonoBehaviour
     {
         if (isAttacking && !attackDelayed)
         {
-            StartCoroutine(Attack(attackTimer));
+            StartCoroutine(Attack(attackDamage));
         }
         //need detection script to change this variable.
         if (isChasing)
@@ -59,7 +59,6 @@ public class Agent : MonoBehaviour
                 
                 if (isMelee)
                 {
-                    dodgeTimer += Time.deltaTime;
                     waitTimer += Time.deltaTime;
 
                     if (waitTimer >= 1f)
@@ -91,7 +90,7 @@ public class Agent : MonoBehaviour
                     if (waitTimer >= 1f)
                     {
 
-                        Distance = UnityEngine.Vector3.Distance(agent.transform.position, player.transform.position);
+                        Distance = Vector3.Distance(agent.transform.position, player.transform.position);
 
                         if (Distance > 6)
                         {
@@ -124,7 +123,7 @@ public class Agent : MonoBehaviour
                 }
                 else
                 {
-                    ChangePatrolPoint();
+                    //ChangePatrolPoint();
                     SetDestination();
                 }
             }
@@ -132,10 +131,11 @@ public class Agent : MonoBehaviour
             if (isWaiting)
             {
                 waitTimer += Time.deltaTime;
+                float totalWaitTime = Random.Range(1f, 10f);
                 if (waitTimer >= totalWaitTime)
                 {
                     isWaiting = false;
-                    ChangePatrolPoint();
+                    //ChangePatrolPoint();
                     SetDestination();
                 }
             }
@@ -144,9 +144,10 @@ public class Agent : MonoBehaviour
 
     void SetDestination()
     {
-        if (patrolPositions != null)
+        if (patrolPositions.Length != 0)
         {
-            UnityEngine.Vector3 targetPos = patrolPositions[currPatrolIndex].transform.position;
+            print("!");
+            Vector3 targetPos = patrolPositions[currPatrolIndex].transform.position;
             //create some random range to choose instead of exact point.
             float x = targetPos.x + Random.Range(-1f, 1f);
             float z = targetPos.z + Random.Range(-1f, 1f);
@@ -156,16 +157,24 @@ public class Agent : MonoBehaviour
         }
         else
         {
-            //Choose random point in space
-            
+            //Enemies should wander when not engaged with the player
+            Vector3 wanderPos = transform.position;
+            float x = wanderPos.x + Random.Range(-3f, 3f);
+            float z = wanderPos.z + Random.Range(-3f, 3f);
+            wanderPos.Set(x, wanderPos.y, z);
+            agent.SetDestination(wanderPos);
+            isTravelling = true;
         }
     }
 
     IEnumerator Attack(float damage)
     {
         attackDelayed = true;
+        print("attack");
         //deal damage to player
+        player.GetComponent<PlayerHealth>().DamagePlayer(damage);
         yield return new WaitForSeconds(attackTimer);
+        this.transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.alienAttackSound);
         attackDelayed = false;
     }
 
