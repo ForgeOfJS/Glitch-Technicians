@@ -10,6 +10,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadSceneAsync("SampleScene");
     }
 
+    public void RollCredits()
+    {
+        SceneManager.LoadSceneAsync("Credits");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
