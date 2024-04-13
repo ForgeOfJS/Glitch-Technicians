@@ -72,7 +72,6 @@ public class Agent : MonoBehaviour
                         {
 
                             agent.SetDestination(player.transform.position);
-                            print(animator.GetCurrentAnimatorStateInfo(0));
                             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Walk_Cycle_1")) animator.SetTrigger("Walk_Cycle_1");
                             isAttacking = false;
                         }
