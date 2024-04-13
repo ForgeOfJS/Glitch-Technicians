@@ -68,7 +68,7 @@ public class Agent : MonoBehaviour
                         agent.speed = 3.5f;
                         Distance = UnityEngine.Vector3.Distance(agent.transform.position, player.transform.position);
 
-                        if (Distance > 2)
+                        if (Distance > 3)
                         {
 
                             agent.SetDestination(player.transform.position);
@@ -177,8 +177,8 @@ public class Agent : MonoBehaviour
         attackDelayed = true;
         print("attack");
         //deal damage to player
-        player.GetComponent<PlayerHealth>().DamagePlayer(damage);
         yield return new WaitForSeconds(attackTimer);
+        player.GetComponent<PlayerHealth>().DamagePlayer(damage);
         this.transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.alienAttackSound);
         attackDelayed = false;
         int randomAttack = Random.Range(1, 5);

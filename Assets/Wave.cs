@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Wave : MonoBehaviour
 {
-    public Agent[] agents;
+    public GameObject[] agents;
     public bool isChasing = false;
     public void StartWaveChase(GameObject player)
     {
         if (!isChasing) isChasing = true;
-        foreach (Agent agent in agents)
+        foreach (GameObject agent in agents)
         {
-            agent.isChasing = true;
-            agent.player = player;
+            agent.GetComponent<Agent>().isChasing = true;
+            agent.GetComponent<Agent>().player = player;
             agent.transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.alienAggroSound);
         }
     }
