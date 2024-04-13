@@ -9,7 +9,9 @@ public class EnemyHealth : MonoBehaviour
     public UnityEvent deathEvent;
 
     public float health;
-    bool isDead = false;
+    public Animator animator;
+    public bool isDead = false;
+    public WaveSpawner waveSpawner;
 
     void Start()
     {
@@ -22,16 +24,11 @@ public class EnemyHealth : MonoBehaviour
         if (health <= 0 && !isDead)
         {
             health = 0;
-            transform.GetComponent<Animator>().SetTrigger("Die");
+            animator.SetTrigger("Die");
             deathEvent.Invoke();
+            waveSpawner.EnemyDeath();
             isDead = true;
-            StartCoroutine(DelayDelete());
+            Destroy(this.gameObject, 5f);
         }
-    }
-
-    IEnumerator DelayDelete()
-    {
-        yield return new WaitForSeconds(1f);
-        Destroy(this);
     }
 }

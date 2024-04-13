@@ -38,19 +38,19 @@ public class Laser_Rifle : MonoBehaviour
     private static bool gunIsGrabbed;
 
     //references
-    private Camera vrCam;
     public GameObject rifleEnd;
-    public GameObject impact;
     public GameObject mark;
-    public AudioClip clip;
-    private AudioSource laserSound;
+    public AudioClip shotSound;
+    public AudioClip chargeCooldownSound;
+    public AudioClip readySound;
+    public AudioSource laserSound;
+    public GameObject lineRenderer;
+    public LayerMask lm;
 
     void Start()
     {
-        laserSound = rifleEnd.GetComponent<AudioSource>();
         actualDmg = damage;
     }
-
 
 
     void Update()
@@ -60,17 +60,18 @@ public class Laser_Rifle : MonoBehaviour
         {
             return;
         }
-        //print("!");
+        //Debug.Log(gunIsGrabbed);
         //if mouse1 pressed fire
         //also limits fire presses based on rate of fire values and current charge
-        if (Input.GetButton("Fire1") && Time.time >= nextToFire && currCharge < totalCharge && gunIsGrabbed)
+        if (Input.GetButton("Fire1") && Time.time >= nextToFire && currCharge < totalCharge)
         {
-            print("!");
-            laserSound.PlayOneShot(clip, 1f);
+            laserSound.PlayOneShot(shotSound, 1f);
+            
             currCharge += 1f;
 
             //altering firerate based on the charge of the weapon
             //essentially the higher the currCharge the slower the firerate
+            nextToFire = Time.time + 1f / fireRate;
             if (currCharge <= totalCharge * .5f)
             {
                 nextToFire = Time.time + 1f / fireRate;
@@ -135,16 +136,19 @@ public class Laser_Rifle : MonoBehaviour
         //calculate a random angle
         Quaternion spreadAngle = Quaternion.AngleAxis(accuracy, new Vector3(0, sign, sign2));
         RaycastHit hit;
+
         //shoots ray out and returns true if ray hits an object
         //can also add effective range float value
-        if (Physics.Raycast(rifleEnd.transform.position, spreadAngle * rifleEnd.transform.forward, out hit, range))
+        bool hasHit = Physics.Raycast(rifleEnd.transform.position, rifleEnd.transform.forward, out hit, range);
+        print(hasHit);
+        //if targeted object has rigidbody apply a force 
+        // if (hit.rigidbody)
+        // {
+        //     hit.rigidbody.AddForce(-hit.normal * force);
+        // }
+        if (hit.collider)
         {
-            //if targeted object has rigidbody apply a force 
-            if (hit.rigidbody)
-            {
-                hit.rigidbody.AddForce(-hit.normal * force);
-            }
-
+            print("!");
             float distance = Vector3.Distance(this.gameObject.transform.position, hit.transform.gameObject.transform.position);
 
             if (distance >= dropoff2)
@@ -155,35 +159,47 @@ public class Laser_Rifle : MonoBehaviour
             {
                 damage = damage * .8f;
             }
-
-            //Debug.Log("Distance: " + distance + "m, Damage: " + damage);
-            damage = actualDmg;
-            //Debug.Log("Distance: " + distance + "m, Damage: " + damage);
-            if (hit.transform.GetComponent<EnemyHealth>())
+            if (hit.transform.tag == "Enemy")
             {
                 hit.transform.GetComponent<EnemyHealth>().DamageEnemy(damage);
             }
+        }
+        if (lineRenderer)
+        {
+            GameObject line = Instantiate(lineRenderer);
+            line.GetComponent<LineRenderer>().SetPositions(new Vector3[] {rifleEnd.transform.position, hasHit ? hit.point : rifleEnd.transform.position + rifleEnd.transform.forward * 100});
+            Destroy(line, .5f);
+        }
 
-            //leave effect where ray hit object and delete that object 1 second later
-            GameObject bullet = Instantiate(impact, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(bullet, 1f);
 
-            //leave bullet mark and delete object 1 second later
+
+        //Debug.Log("Distance: " + distance + "m, Damage: " + damage);
+        //DamageHandler.DealDamage(damage, hit.transform.gameObject);
+
+        damage = actualDmg;
+
+        //leave effect where ray hit object and delete that object 1 second later
+        // GameObject bullet = Instantiate(impact, hit.point, Quaternion.LookRotation(hit.normal));
+        // Destroy(bullet, 1f);
+
+        //leave bullet mark and delete object 1 second later
+        if (mark) 
+        {
             GameObject laserMark = Instantiate(mark, hit.point, Quaternion.LookRotation(hit.normal));
             laserMark.transform.position += laserMark.transform.forward / 1000;
-
             Destroy(laserMark, 1f);
-
-
         }
+            
     }
 
     //cool down the gun after gun stops firing
     IEnumerator CoolDown()
     {
+        laserSound.PlayOneShot(chargeCooldownSound, 1f);
         isCooling = true;
         yield return new WaitForSeconds((int)(totalCharge * .15f));
         currCharge = 0;
         isCooling = false;
+        laserSound.PlayOneShot(readySound, 1f);
     }
 }

@@ -32,6 +32,7 @@ public class Agent : MonoBehaviour
     [Header("Enemy Damage Stats")]
     public float attackTimer = 1.5f;
     public float attackDamage = 6f;
+    public float attackDistance = 3f;
 
 
     void Start()
@@ -47,6 +48,11 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.GetComponent<EnemyHealth>().isDead)
+        {
+            agent.isStopped = true;
+            return;
+        } 
         if (isAttacking && !attackDelayed)
         {
             StartCoroutine(Attack(attackDamage));
@@ -68,7 +74,7 @@ public class Agent : MonoBehaviour
                         agent.speed = 3.5f;
                         Distance = UnityEngine.Vector3.Distance(agent.transform.position, player.transform.position);
 
-                        if (Distance > 3)
+                        if (Distance > attackDistance)
                         {
 
                             agent.SetDestination(player.transform.position);
@@ -105,7 +111,8 @@ public class Agent : MonoBehaviour
                         {
                             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Armature|Fight_Idle_1")) animator.SetTrigger("Fight_Idle_1");
                             agent.SetDestination(agent.transform.position);
-
+                            agent.velocity = Vector3.zero;
+                            agent.isStopped = true;
                             waitTimer = 0f;
 
                         }
@@ -124,6 +131,8 @@ public class Agent : MonoBehaviour
                     animator.SetTrigger("Rest");
                     isWaiting = true;
                     waitTimer = 0f;
+                    agent.velocity = Vector3.zero;
+                    agent.isStopped = true;
                 }
                 else
                 {
