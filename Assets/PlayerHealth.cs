@@ -42,5 +42,6 @@ public class PlayerHealth : MonoBehaviour
     {
         isDead = true;
         deathEvent.Invoke();
+        Time.timeScale = 0f;
     }
 }
