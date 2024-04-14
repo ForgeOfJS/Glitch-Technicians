@@ -45,4 +45,9 @@ public class PlayerHealth : MonoBehaviour
         deathEvent.Invoke();
         Time.timeScale = 0f;
     }
+
+    public float GetHealth
+    {
+        get { return playerHealth; }
+    } 
 }
