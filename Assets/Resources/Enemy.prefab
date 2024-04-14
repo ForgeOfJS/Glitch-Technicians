@@ -4696,8 +4696,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 3.05
-  m_Height: 2.66
+  m_Radius: 0.7
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &3490065551575034000
@@ -4772,7 +4772,7 @@ MonoBehaviour:
   Distance: 0
   attackTimer: 1.5
   attackDamage: 6
-  attackDistance: 3
+  attackDistance: 4
 --- !u!82 &781509996263941414
 AudioSource:
   m_ObjectHideFlags: 0

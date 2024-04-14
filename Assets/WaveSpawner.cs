@@ -10,6 +10,7 @@ public class WaveSpawner : MonoBehaviour
     public int enemyAliveCount;
     public Wave wave;
     bool spawned = false;
+    public GameObject player;
 
     public void StartWave()
     {
@@ -33,7 +34,7 @@ public class WaveSpawner : MonoBehaviour
             wave.agents[i] = enemy;
             enemy.transform.GetChild(1).GetComponent<AgentDetection>().wave = wave;
         }
-
+        wave.StartWaveChase(player);
         spawned = true;
     }
 
