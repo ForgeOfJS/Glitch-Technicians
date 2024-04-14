@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour
     float playerHealth;
     [HideInInspector]
     public bool isDead = false;
+    public GameObject postProcessingGO;
 
     void Start()
     {
@@ -22,8 +23,13 @@ public class PlayerHealth : MonoBehaviour
 
     public void DamagePlayer(float damage)
     {
-
         playerHealth -= damage;
+
+        DamageEffect damageEffect = postProcessingGO.GetComponent<DamageEffect>();
+        if (damageEffect != null)
+        {
+            StartCoroutine(damageEffect.TakeDamageEffect());
+        }
         if (playerHealth <= 0f && !isDead)
         {
             playerHealth = 0f;
@@ -45,4 +51,9 @@ public class PlayerHealth : MonoBehaviour
         deathEvent.Invoke();
         Time.timeScale = 0f;
     }
+
+    public float GetHealth
+    {
+        get { return playerHealth; }
+    } 
 }
