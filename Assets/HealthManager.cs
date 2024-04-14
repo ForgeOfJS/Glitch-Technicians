@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthManager : MonoBehaviour
 {
     public Image healthBar;
-    public PlayerHealth playerHealth;
+    private PlayerHealth playerHealth;
 
     void Start()
     {
