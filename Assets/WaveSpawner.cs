@@ -31,6 +31,7 @@ public class WaveSpawner : MonoBehaviour
             enemy.GetComponent<EnemyHealth>().maxHealth = 100f * randomScale;
             enemy.GetComponent<EnemyHealth>().health = 100f * randomScale;
             enemy.GetComponent<EnemyHealth>().waveSpawner = this;
+            enemy.GetComponent<Agent>().stepDelay *= randomScale;
             wave.agents[i] = enemy;
             enemy.transform.GetChild(1).GetComponent<AgentDetection>().wave = wave;
         }

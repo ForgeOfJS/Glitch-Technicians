@@ -246,13 +246,13 @@ MonoBehaviour:
       - m_Target: {fileID: 816046324}
         m_TargetAssemblyTypeName: LevelSelection, Assembly-CSharp
         m_MethodName: LoadLevel
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level 1 - Copy
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &6562248
@@ -1324,6 +1324,10 @@ MonoBehaviour:
   alienAggroSound: {fileID: 0}
   playerDeathSound: {fileID: 0}
   background: {fileID: 8300000, guid: 3a2be30b29b87934cabf7fd332fe8c9c, type: 3}
+  metalFootsteps: []
+  outsideFootsteps: []
+  jump: []
+  itemEquip: {fileID: 0}
 --- !u!4 &635813384
 Transform:
   m_ObjectHideFlags: 0
@@ -3482,13 +3486,13 @@ MonoBehaviour:
       - m_Target: {fileID: 816046324}
         m_TargetAssemblyTypeName: LevelSelection, Assembly-CSharp
         m_MethodName: LoadLevel
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level 2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1983621368

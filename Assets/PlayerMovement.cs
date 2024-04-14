@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 velocity;
     bool isGrounded;
+    float timer = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (transform.GetComponent<PlayerHealth>().isDead) return;
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -36,11 +38,24 @@ public class PlayerMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
+        if (x > 0f || z > 0f)
+        {
+            timer += Time.deltaTime;
+            if (timer > .5f)
+            {
+                int random = Random.Range(0, AudioManager.Instance.metalFootsteps.Length-1);
+                transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.metalFootsteps[random], .5f);
+                timer = 0f;
+            }
+        }
+
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * speed * Time.deltaTime);
 
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
+            int random = Random.Range(0, AudioManager.Instance.jump.Length-1);
+            transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.jump[random], .5f);
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 

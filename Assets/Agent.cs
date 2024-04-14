@@ -33,6 +33,8 @@ public class Agent : MonoBehaviour
     public float attackTimer = 1.5f;
     public float attackDamage = 6f;
     public float attackDistance = 3f;
+    float timer = 0f;
+    public float stepDelay = .75f;
 
 
     void Start()
@@ -48,6 +50,16 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!agent.isStopped && !isAttacking)
+        {
+            timer += Time.deltaTime;
+            if (timer > stepDelay)
+            {
+                int r = Random.Range(0, 1);
+                transform.GetComponent<AudioSource>().PlayOneShot(AudioManager.Instance.metalFootsteps[r]);
+                timer = 0f;
+            }
+        }
         if (transform.GetComponent<EnemyHealth>().isDead)
         {
             agent.isStopped = true;

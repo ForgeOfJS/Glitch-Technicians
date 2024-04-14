@@ -11,6 +11,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip alienAggroSound;
     public AudioClip playerDeathSound;
     public AudioClip background;
+    public AudioClip[] metalFootsteps;
+    public AudioClip[] outsideFootsteps;
+    public AudioClip[] jump;
+    public AudioClip itemEquip;
+
 
     private void Start()
     {

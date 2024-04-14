@@ -21,8 +21,8 @@ public class LevelSelection : MonoBehaviour
             buttons[i].interactable = true;
         }
     }
-    public void LoadLevel  (int levelId)
+    public void LoadLevel  (string levelName)
     {
-        SceneManager.LoadScene(levelId);
+        SceneManager.LoadScene(levelName);
     }
 }
